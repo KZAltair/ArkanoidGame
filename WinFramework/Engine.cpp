@@ -26,6 +26,7 @@ Engine::Engine(Window& wnd)
 			i++;
 		}
 	}
+	testBrick = Brick(RectF(Vec2(200.0f, 300.0f), Vec2(300.0f, 400.0f)), 255, 255, 255);
 }
 
 Engine::~Engine()
@@ -75,6 +76,19 @@ void Engine::Update(Window& wnd)
 	pad.DoBallCollision(ball);
 	ball.DoWallCollision(walls);
 	pad.DoWallCollision(walls);
+	startPos = { 100.0f, 100.0f };
+	endPos = Vec2((float)(wnd.mouse.GetPosX()), (float)(wnd.mouse.GetPosY()));
+	Vec2 ray_dir = endPos - startPos;
+	if (testBrick.RayVsRectCollision(startPos, ray_dir, RectF(Vec2(200.0f, 300.0f), Vec2(300.0f, 400.0f)), cp, cn, t) && t < 1.0f)
+	{
+		testBrick = Brick(RectF(Vec2(200.0f, 300.0f), Vec2(300.0f, 400.0f)), 0, 255, 0);
+		collided = true;
+	}
+	else
+	{
+		testBrick = Brick(RectF(Vec2(200.0f, 300.0f), Vec2(300.0f, 400.0f)), 255, 255, 255);
+		collided = false;
+	}
 }
 
 LARGE_INTEGER Engine::EngineGetWallClock() const
@@ -100,6 +114,12 @@ void Engine::ComposeFrame()
 	for (Brick& b : bricks)
 	{
 		b.Draw(gfx, Colors);
+	}
+	testBrick.Draw(gfx, Colors);
+	gfx.DrawLine(Colors, startPos, endPos, 255, 0, 0);
+	if (collided)
+	{
+		gfx.DrawLine(Colors, cp, cp + cn * 20.0f, 255, 255, 0);
 	}
 	
 }

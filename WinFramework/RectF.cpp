@@ -32,3 +32,8 @@ bool RectF::IsOverlappingWith(const RectF& other) const
 	return right > other.left && left < other.right
 		&& bottom > other.top && top < other.bottom;
 }
+
+Vec2 RectF::GetPos() const
+{
+	return Vec2(left, top);
+}

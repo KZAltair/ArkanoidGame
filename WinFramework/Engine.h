@@ -49,6 +49,13 @@ private:
 	Brick bricks[nBricks];
 	Paddle pad;
 	RectF walls;
+	Brick testBrick;
+	Vec2 startPos;
+	Vec2 endPos;
+	Vec2 cp = { 0.0f, 0.0f };
+	Vec2 cn = { 0.0f, 0.0f };
+	float t;
+	bool collided = false;
 };
 
 /*
