@@ -2,7 +2,7 @@
 
 Engine::Engine(Window& wnd)
 	:
-	ball(Vec2(300.0f, 300.0f), Vec2(300.0f, 300.0f)),
+	ball(Vec2(300.0f, 300.0f), Vec2(100.0f, 100.0f)),
 	pad(Vec2(400.0f, 500.0f), 75, 25, 255, 100, 75),
 	walls(0.0f, 800.0f, 0.0f, 600.0f)
 {
