@@ -2,7 +2,7 @@
 
 Engine::Engine(Window& wnd)
 	:
-	ball(Vec2(300.0f, 300.0f), Vec2(100.0f, 100.0f)),
+	ball(Vec2(300.0f, 300.0f), Vec2(300.0f, 300.0f)),
 	pad(Vec2(400.0f, 500.0f), 75, 25, 255, 100, 75),
 	walls(0.0f, 800.0f, 0.0f, 600.0f)
 {
@@ -26,7 +26,6 @@ Engine::Engine(Window& wnd)
 			i++;
 		}
 	}
-	testBrick = Brick(RectF(Vec2(200.0f, 300.0f), Vec2(300.0f, 400.0f)), 255, 255, 255);
 }
 
 Engine::~Engine()
@@ -67,28 +66,18 @@ void Engine::Run(Window& wnd)
 void Engine::Update(Window& wnd)
 {
 	float dt = ft.Go();
+	Vec2 newVel = { 0.0f, 0.0f };
 	ball.Update(dt);
 	pad.Update(wnd.mouse, dt);
 	for (Brick& b : bricks)
 	{
-		b.DoBallCollision(ball);
+		b.DoTraceCollisionTest(ball, b.GetOriginalRect(), cp, cn, t, dt);
 	}
 	pad.DoBallCollision(ball);
 	ball.DoWallCollision(walls);
 	pad.DoWallCollision(walls);
-	startPos = { 100.0f, 100.0f };
-	endPos = Vec2((float)(wnd.mouse.GetPosX()), (float)(wnd.mouse.GetPosY()));
-	Vec2 ray_dir = endPos - startPos;
-	if (testBrick.RayVsRectCollision(startPos, ray_dir, RectF(Vec2(200.0f, 300.0f), Vec2(300.0f, 400.0f)), cp, cn, t) && t < 1.0f)
-	{
-		testBrick = Brick(RectF(Vec2(200.0f, 300.0f), Vec2(300.0f, 400.0f)), 0, 255, 0);
-		collided = true;
-	}
-	else
-	{
-		testBrick = Brick(RectF(Vec2(200.0f, 300.0f), Vec2(300.0f, 400.0f)), 255, 255, 255);
-		collided = false;
-	}
+	
+	
 }
 
 LARGE_INTEGER Engine::EngineGetWallClock() const
@@ -114,14 +103,7 @@ void Engine::ComposeFrame()
 	for (Brick& b : bricks)
 	{
 		b.Draw(gfx, Colors);
-	}
-	testBrick.Draw(gfx, Colors);
-	gfx.DrawLine(Colors, startPos, endPos, 255, 0, 0);
-	if (collided)
-	{
-		gfx.DrawLine(Colors, cp, cp + cn * 20.0f, 255, 255, 0);
-	}
-	
+	}	
 }
 
 

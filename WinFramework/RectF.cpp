@@ -37,3 +37,8 @@ Vec2 RectF::GetPos() const
 {
 	return Vec2(left, top);
 }
+
+Vec2 RectF::GetCenter() const
+{
+	return Vec2((left + right) / 2.0f, (top + bottom) / 2.0f);
+}

@@ -77,3 +77,48 @@ bool Brick::RayVsRectCollision(const Vec2& ray_origin, const Vec2& ray_dir, cons
 
 	return true;
 }
+
+bool Brick::DynamicRectVsRect(const Vec2& vel, const RectF& rect_in, const RectF& target, Vec2& contact_point, Vec2& contact_normal, float& contact_time, float ElapsedTime)
+{
+	//Vel of the moving rect
+	if (vel.x == 0.0f && vel.y == 0.0) return false;
+
+	Vec2 expPos = target.GetPos() - Vec2((rect_in.right - rect_in.left) / 2, (rect_in.bottom - rect_in.top) / 2);
+	Vec2 expSize = Vec2(target.right, target.bottom) + Vec2((rect_in.right - rect_in.left) / 2, (rect_in.bottom - rect_in.top) / 2);
+	expanded_target = RectF(expPos, expSize);
+
+	if (RayVsRectCollision(rect_in.GetCenter(), vel * ElapsedTime, expanded_target, contact_point, contact_normal, contact_time))
+	{
+
+		if (contact_time <= 1.0f)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+void Brick::DoTraceCollisionTest(Ball& ball, const RectF& target, Vec2& contact_point, Vec2& contact_normal, float& contact_time, float ElapsedTime)
+{
+	if (!destroyed)
+	{
+		if (DynamicRectVsRect(ball.GetVelocity(), ball.MakeRect(), target, contact_point, contact_normal,
+			contact_time, ElapsedTime))
+		{
+			Vec2 newVel = ball.GetVelocity();
+			Vec2 ballVel = ball.GetVelocity();
+			ballVel.Normalize();
+			ballVel += contact_normal * 2.0f;
+			float len = newVel.GetLength();
+			ballVel = ballVel.Normalize() * len;
+			ball.SetVelocity(ballVel);
+			destroyed = true;
+		}
+	}
+}
+
+RectF Brick::GetOriginalRect() const
+{
+	return rect;
+}
+

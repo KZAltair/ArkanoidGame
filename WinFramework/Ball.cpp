@@ -75,3 +75,18 @@ void Ball::Update(float dt)
 	pos += vel * dt;
 }
 
+Vec2 Ball::GetVelocity() const
+{
+	return vel;
+}
+
+void Ball::SetVelocity(Vec2 vel_in)
+{
+	vel = vel_in;
+}
+
+RectF Ball::MakeRect() const
+{
+	return RectF(pos.x - radius, pos.x + radius, pos.y - radius, pos.y + radius);
+}
+

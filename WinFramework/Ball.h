@@ -14,6 +14,9 @@ public:
 	RectF GetRect() const;
 	void Draw(Graphics& gfx, int* Colors);
 	void Update(float dt);
+	Vec2 GetVelocity()const;
+	void SetVelocity(Vec2 vel_in);
+	RectF MakeRect() const;
 
 private:
 	static constexpr float radius = 5.0f;
