@@ -14,7 +14,7 @@ public:
 		Vec2& contact_point, Vec2& contact_normal, float& t_hit_near);
 	bool DynamicRectVsRect(const Vec2& vel, const RectF& rect_in, const RectF& target,
 		Vec2& contact_point, Vec2& contact_normal, float& contact_time, float ElapsedTime);
-	void DoTraceCollisionTest(Ball& ball, const RectF& target, Vec2& contact_point,
+	bool DoTraceCollisionTest(Ball& ball, const RectF& target, Vec2& contact_point,
 		Vec2& contact_normal, float& contact_time, float ElapsedTime);
 	RectF GetOriginalRect() const;
 private:

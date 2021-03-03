@@ -31,9 +31,12 @@ void Paddle::Draw(Graphics& gfx, int* Colors)
 	}
 }
 
-void Paddle::Update(Mouse& mouse, float dt)
+void Paddle::Update(const Mouse& mouse, float dt)
 {
+	Vec2 oldPos = pos;
 	pos.x = (float)(mouse.GetPosX());
+	speed = (pos - oldPos).GetLength();
+	vel = (pos - oldPos).Normalize();
 }
 
 bool Paddle::DoBallCollision(Ball& ball)
@@ -61,4 +64,30 @@ void Paddle::DoWallCollision(const RectF& walls)
 			pos.x -= rect.right - walls.right;
 		}
 	}
+}
+
+void Paddle::DoTraceCollisionTest(Ball& ball, const RectF& target, Vec2& contact_point, Vec2& contact_normal, float& contact_time, float ElapsedTime)
+{
+	if (cCollider.DynamicRectVsRect(ball.GetVelocity(), ball.MakeRect(), target, contact_point, contact_normal,
+		contact_time, ElapsedTime))
+	{
+		Vec2 newVel = ball.GetVelocity();
+		Vec2 ballVel = ball.GetVelocity();
+		ballVel.Normalize();
+		ballVel += (contact_normal * 2.0f) + vel;
+		len = newVel.GetLength() + speed;
+		len = std::min(len, maxSpeed);
+		ballVel = (ballVel.Normalize() * len);
+		ball.SetVelocity(ballVel);
+	}
+}
+
+Vec2 Paddle::GetPos() const
+{
+	return pos;
+}
+
+RectF Paddle::GetRect() const
+{
+	return RectF::FromCenter(pos, (float)(width / 2), (float)(height / 2));
 }

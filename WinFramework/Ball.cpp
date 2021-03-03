@@ -5,6 +5,8 @@ Ball::Ball(const Vec2& pos_in, const Vec2& vel_in)
 	pos(pos_in),
 	vel(vel_in)
 {
+	startPos = pos;
+	startVel = vel;
 }
 
 Ball::~Ball()
@@ -35,8 +37,14 @@ bool Ball::DoWallCollision(const RectF& walls)
 	}
 	else if (rect.bottom > walls.bottom)
 	{
-		pos.y -= rect.bottom - walls.bottom;
-		ReboundY();
+		//For debug only
+		//pos.y -= rect.bottom - walls.bottom;
+		//ReboundY();
+
+		isLostLife = true;
+
+		pos = startPos;
+		vel = startVel;
 		collided = true;
 	}
 	return collided;
@@ -88,5 +96,20 @@ void Ball::SetVelocity(Vec2 vel_in)
 RectF Ball::MakeRect() const
 {
 	return RectF(pos.x - radius, pos.x + radius, pos.y - radius, pos.y + radius);
+}
+
+void Ball::SetPos(Vec2 in)
+{
+	pos = in;
+}
+
+bool Ball::GetLifeStatus() const
+{
+	return isLostLife;
+}
+
+void Ball::SetLifeStatus(bool inFlag)
+{
+	isLostLife = inFlag;
 }
 

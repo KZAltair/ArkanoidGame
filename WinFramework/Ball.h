@@ -17,9 +17,15 @@ public:
 	Vec2 GetVelocity()const;
 	void SetVelocity(Vec2 vel_in);
 	RectF MakeRect() const;
+	void SetPos(Vec2 in);
+	bool GetLifeStatus() const;
+	void SetLifeStatus(bool inFlag);
 
 private:
 	static constexpr float radius = 5.0f;
 	Vec2 pos;
 	Vec2 vel;
+	Vec2 startPos;
+	Vec2 startVel;
+	bool isLostLife = false;
 };

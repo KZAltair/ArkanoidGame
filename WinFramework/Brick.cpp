@@ -98,7 +98,7 @@ bool Brick::DynamicRectVsRect(const Vec2& vel, const RectF& rect_in, const RectF
 	return false;
 }
 
-void Brick::DoTraceCollisionTest(Ball& ball, const RectF& target, Vec2& contact_point, Vec2& contact_normal, float& contact_time, float ElapsedTime)
+bool Brick::DoTraceCollisionTest(Ball& ball, const RectF& target, Vec2& contact_point, Vec2& contact_normal, float& contact_time, float ElapsedTime)
 {
 	if (!destroyed)
 	{
@@ -113,8 +113,10 @@ void Brick::DoTraceCollisionTest(Ball& ball, const RectF& target, Vec2& contact_
 			ballVel = ballVel.Normalize() * len;
 			ball.SetVelocity(ballVel);
 			destroyed = true;
+			return true;
 		}
 	}
+	return false;
 }
 
 RectF Brick::GetOriginalRect() const

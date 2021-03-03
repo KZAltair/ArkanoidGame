@@ -1,5 +1,5 @@
 #pragma once
-#include "Vec2.h"
+#include "RectF.h"
 
 class Graphics
 {
@@ -13,4 +13,5 @@ public:
 	void ClearScreenSuperFast(int* Colors);
 	void DrawPixel(int* Colors, int x, int y, unsigned char r, unsigned char g, unsigned char b);
 	void DrawLine(int* Colors, Vec2 p0, Vec2 p1, unsigned char r, unsigned char g, unsigned char b);
+	void DrawRect(int* Colors, const RectF& rect_in, unsigned char r, unsigned char g, unsigned char b);
 };

@@ -2,30 +2,12 @@
 
 Engine::Engine(Window& wnd)
 	:
-	ball(Vec2(300.0f, 300.0f), Vec2(300.0f, 300.0f)),
-	pad(Vec2(400.0f, 500.0f), 75, 25, 255, 100, 75),
-	walls(0.0f, 800.0f, 0.0f, 600.0f)
+	gameMenu(RectF(Vec2(0.0f, 0.0f), Vec2(800.0f, 600.0f)), 163, 172, 255, true)
 {
 	Colors = wnd.GetColorBuffer();
 	QueryPerformanceFrequency(&PerfCountFrequecyResult);
 	PerfCountFrequency = (float)(PerfCountFrequecyResult.QuadPart);
 	SleepIsGranular = (timeBeginPeriod(1) == TIMERR_NOERROR);
-
-	Vec2 topLeft = Vec2(100.0f, 50.0f);
-	int i = 0;
-	int changingColor = 50;
-	int stratingColor = 50;
-
-	for (int y = 0; y < Rows; y++)
-	{
-		for (int x = 0; x < Colls; x++)
-		{
-			bricks[i] = Brick(RectF(topLeft + Vec2((float)x * brickWidth, (float)y * brickHeight), 
-				topLeft + Vec2((float)x * brickWidth + brickWidth, (float)y * brickHeight + brickHeight)), 
-				y * changingColor + stratingColor, y * changingColor, y * changingColor + stratingColor);
-			i++;
-		}
-	}
 }
 
 Engine::~Engine()
@@ -66,17 +48,44 @@ void Engine::Run(Window& wnd)
 void Engine::Update(Window& wnd)
 {
 	float dt = ft.Go();
-	Vec2 newVel = { 0.0f, 0.0f };
-	ball.Update(dt);
-	pad.Update(wnd.mouse, dt);
-	for (Brick& b : bricks)
+	if (!gameMenu.isVisible())
 	{
-		b.DoTraceCollisionTest(ball, b.GetOriginalRect(), cp, cn, t, dt);
+		if (!isInit)
+		{
+			if (game != nullptr)
+			{
+				delete game;
+				game = nullptr;
+			}
+			game = new ArkanoidGame(3);
+			if (game != nullptr)
+			{
+				isInit = true;
+			}
+		}
+		else
+		{
+			if (!game->isGameOver())
+			{
+				game->Update(dt, wnd.mouse);
+			}
+			else
+			{
+				gameMenu.SetGameMenuVisibility(game->isGameOver());
+				isInit = false;
+			}
+		}
+
+
 	}
-	pad.DoBallCollision(ball);
-	ball.DoWallCollision(walls);
-	pad.DoWallCollision(walls);
-	
+	else
+	{
+		gameMenu.Update(wnd.mouse);
+		if (gameMenu.isGameQuit())
+		{
+			PostQuitMessage(0);
+		}
+	}
 	
 }
 
@@ -97,13 +106,18 @@ void Engine::ComposeFrame()
 {
 	//gfx.FillScreenFast(Colors,255, 0, 0);
 	gfx.ClearScreenSuperFast(Colors);
-	//gfx.DrawPixel(Colors, 100, 100, 255, 0, 0);
-	ball.Draw(gfx, Colors);
-	pad.Draw(gfx, Colors);
-	for (Brick& b : bricks)
+
+	if (!gameMenu.isVisible())
 	{
-		b.Draw(gfx, Colors);
-	}	
+		if (isInit)
+		{
+			game->Draw(gfx, Colors);
+		}
+	}
+	else
+	{
+		gameMenu.Draw(gfx, Colors);
+	}
 }
 
 

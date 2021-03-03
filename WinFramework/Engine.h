@@ -5,9 +5,8 @@
 #include <string>
 //TODO: remake this from sleep to thread
 #include <thread>
-#include "Ball.h"
-#include "Brick.h"
-#include "Paddle.h"
+#include "GameMenu.h"
+#include "ArkanoidGame.h"
 
 class Engine
 {
@@ -40,18 +39,9 @@ private:
 	float cX = 0;
 private:
 	//Game stuff here
-	static constexpr float brickWidth = 50.0f;
-	static constexpr float brickHeight = 25.0f;
-	static constexpr int Rows = 4;
-	static constexpr int Colls = 12;
-	static constexpr int nBricks = Rows * Colls;
-	Ball ball;
-	Brick bricks[nBricks];
-	Paddle pad;
-	RectF walls;
-	Vec2 cp = { 0.0f, 0.0f };
-	Vec2 cn = { 0.0f, 0.0f };
-	float t;
+	GameMenu gameMenu;
+	ArkanoidGame* game = nullptr;
+	bool isInit = false;
 };
 
 /*
