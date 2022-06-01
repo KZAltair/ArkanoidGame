@@ -86,7 +86,7 @@ Vec2& Vec2::Normalize()
 	return *this = GetNormalized();
 }
 
-Vec2& Vec2::GetNormalized()
+Vec2 Vec2::GetNormalized()
 {
 	const float len = GetLength();
 	if (len != 0.0f)

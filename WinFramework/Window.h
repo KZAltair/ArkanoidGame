@@ -29,7 +29,7 @@ private:
 	int* Colors = nullptr;
 	int WindowWidth;
 	int WindowHeight;
-	static constexpr char* pClassName = "WinFramework";
+	static constexpr auto* pClassName = "WinFramework";
 
 public:
 	Keyboard kbd;
